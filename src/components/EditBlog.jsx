@@ -67,7 +67,7 @@ const EditBlog = ({ blogs, onUpdateBlog }) => {
         <div>
           <input
             type="text"
-            placeholder="Blog Title"
+            placeholder="Blog title"
             value={blogData.title}
             onChange={(e) => setBlogData(prev => ({ ...prev, title: e.target.value }))}
             disabled={isSubmitting}
