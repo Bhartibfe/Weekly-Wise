@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronDown, ChevronsRight, Menu, Home } from 'lucide-react';
 import Profile from './Profile';
-import { useAuth } from './AuthContext'; // Add this import
+import { useAuth } from './AuthProvider'; // Add this import
 
 const HomePage = () => {
   const navigate = useNavigate();

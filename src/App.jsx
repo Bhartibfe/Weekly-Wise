@@ -1,10 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './components/HomePage';
-import { AuthProvider } from './components/AuthContext';
+import { AuthProvider } from './components/AuthProvider'; // Updated import path
 import { PrivateRoute } from './components/PrivateRoute';
+import HomePage from './components/HomePage';
 import Login from './components/Login';
 import BlogsPage from './components/BlogsPage';
-import TodoPage from './components/TodoPage';
+import TodoPage from './components/Todopage';
+
 const ProjectPage = () => <div className="p-8">Project Planner Content</div>;
 const WeeklyPage = () => <div className="p-8">Weekly Planner Content</div>;
 const NotesPage = () => <div className="p-8">Notes Content</div>;

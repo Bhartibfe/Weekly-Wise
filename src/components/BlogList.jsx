@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import BlogCard from './BlogCard';
-import SearchBar from './SearchBar';
 import { ArrowUpDown } from 'lucide-react';
-import { loadFromLocalStorage, saveToLocalStorage } from '../utils/LocalStorage';
+import SearchBar from './SearchBar';
 
 const SORT_OPTIONS = {
   NEWEST: 'newest',
@@ -15,7 +14,7 @@ const SORT_OPTIONS = {
 const BlogList = ({ blogs, onLike, onDelete = () => {}, onPin = () => {} }) => {
   const [filteredBlogs, setFilteredBlogs] = useState(blogs);
   const [sortOption, setSortOption] = useState(() => 
-    loadFromLocalStorage('blogSortPreference') || SORT_OPTIONS.NEWEST
+    localStorage.getItem('blogSortPreference') || SORT_OPTIONS.NEWEST
   );
   const [showSortMenu, setShowSortMenu] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -79,72 +78,90 @@ const BlogList = ({ blogs, onLike, onDelete = () => {}, onPin = () => {} }) => {
 
   const handleSortSelect = (option) => {
     setSortOption(option);
-    saveToLocalStorage('blogSortPreference', option);
+    localStorage.setItem('blogSortPreference', option);
     setShowSortMenu(false);
   };
 
   return (
-    <div className="px-12 py-8 max-w-7xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <SearchBar onSearch={handleSearch} />
-        <div className="relative">
-          <button 
-            onClick={() => setShowSortMenu(!showSortMenu)}
-            className="p-2 rounded-md text-gray-600 hover:text-[#5A67D8] focus:outline-none"
-          >
-            <ArrowUpDown size={20} />
-          </button>
-          {showSortMenu && (
-            <div 
-              className="absolute right-0 top-full mt-2 bg-white border rounded-md shadow-lg min-w-[150px] z-10"
-              ref={sortMenuRef}
-            >
-              <button
-                className={`block w-full text-left px-4 py-2 text-sm ${
-                  sortOption === SORT_OPTIONS.NEWEST ? 'bg-gray-200 font-semibold' : 'hover:bg-gray-100'
-                }`}
-                onClick={() => handleSortSelect(SORT_OPTIONS.NEWEST)}
-              >
-                Newest First
-              </button>
-              <button
-                className={`block w-full text-left px-4 py-2 text-sm ${
-                  sortOption === SORT_OPTIONS.OLDEST ? 'bg-gray-200 font-semibold' : 'hover:bg-gray-100'
-                }`}
-                onClick={() => handleSortSelect(SORT_OPTIONS.OLDEST)}
-              >
-                Oldest First
-              </button>
-              <button
-                className={`block w-full text-left px-4 py-2 text-sm ${
-                  sortOption === SORT_OPTIONS.ALPHABETICAL ? 'bg-gray-200 font-semibold' : 'hover:bg-gray-100'
-                }`}
-                onClick={() => handleSortSelect(SORT_OPTIONS.ALPHABETICAL)}
-              >
-                A-Z
-              </button>
-              <button
-                className={`block w-full text-left px-4 py-2 text-sm ${
-                  sortOption === SORT_OPTIONS.REVERSE_ALPHABETICAL ? 'bg-gray-200 font-semibold' : 'hover:bg-gray-100'
-                }`}
-                onClick={() => handleSortSelect(SORT_OPTIONS.REVERSE_ALPHABETICAL)}
-              >
-                Z-Ab
-              </button>
-            </div>
-          )}
+    <div className="min-h-screen bg-gradient-to-r from-blue-50 to-indigo-50">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Explore Our Blog
+          </h1>
+          <p className="text-lg text-gray-600">
+            Discover interesting stories and insights
+          </p>
         </div>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredBlogs.map(blog => (
-          <BlogCard 
-            key={blog.id} 
-            blog={blog} 
-            onLike={onLike} 
-            onDelete={onDelete}
-            onPin={onPin}
-          />
-        ))}
+
+          {/* Centered Search and Sort Controls */}
+          <div className="max-w-3xl mx-auto px-4 mb-8">
+          <div className="flex items-center justify-center gap-4">
+            <div className="w-96">
+              <SearchBar 
+                onSearch={handleSearch}
+                className="text-lg shadow-sm"
+              />
+            </div>
+            <div className="relative">
+              <button 
+                onClick={() => setShowSortMenu(!showSortMenu)}
+                className="flex items-center gap-2 px-4 py-3 bg-white rounded-full shadow-sm border 
+                  border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors duration-200 whitespace-nowrap"
+              >
+                <ArrowUpDown size={16} />
+                <span>Sort</span>
+              </button>
+              {showSortMenu && (
+                <div 
+                  className="absolute right-0 top-full mt-2 bg-white border border-gray-100 
+                    rounded-lg shadow-lg min-w-[180px] z-10 overflow-hidden"
+                  ref={sortMenuRef}
+                >
+                  {Object.entries(SORT_OPTIONS).map(([key, value]) => (
+                    <button
+                      key={value}
+                      className={`block w-full text-left px-4 py-3 text-sm transition-colors duration-150
+                        ${sortOption === value 
+                          ? 'bg-indigo-50 text-indigo-600 font-medium' 
+                          : 'text-gray-700 hover:bg-gray-50'
+                        }`}
+                      onClick={() => handleSortSelect(value)}
+                    >
+                      {key === 'NEWEST' ? 'Newest First' : 
+                       key === 'OLDEST' ? 'Oldest First' : 
+                       key === 'ALPHABETICAL' ? 'A-Z' : 'Z-A'}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Blog Grid */}
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredBlogs.length > 0 ? (
+              filteredBlogs.map(blog => (
+                <BlogCard 
+                  key={blog.id}
+                  blog={blog} 
+                  onLike={onLike} 
+                  onDelete={onDelete}
+                  onPin={onPin}
+                />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-12">
+                <p className="text-lg text-gray-600">
+                  No blogs found matching your search criteria.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

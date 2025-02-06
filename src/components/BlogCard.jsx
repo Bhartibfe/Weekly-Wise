@@ -54,32 +54,19 @@ const BlogCard = ({ blog, onLike, onDelete, onPin }) => {
     }
     return words.join(' ');
   };
+
   const handleEditClick = (e) => {
     e.preventDefault();
-    navigate(`/blogs/edit/${blog.id}`);  // When clicking edit
-     // When clicking read more
+    navigate(`/blogs/edit/${blog.id}`);
     setShowDropdown(false);
   };
 
   return (
     <div
-      className={`relative bg-white rounded-lg p-6 shadow-md overflow-hidden transition-transform duration-200 hover:translate-y-[-2px] ${
+      className={`relative bg-white rounded-lg p-6 shadow-md overflow-hidden transition-transform duration-200 hover:translate-y-[-2px] flex flex-col min-h-[200px] ${
         blog.isPinned ? 'border-2 border-[#c49fe7] bg-[#f8f9fa]' : ''
       }`}
     >
-      {/* Like Button */}
-      <button
-        className={`absolute bottom-3 right-3 bg-none border-none cursor-pointer p-2 text-gray-500 transition-colors duration-200 hover:text-[#FF4081] ${
-          blog.isLiked ? 'text-[#e91e63]' : ''
-        }`}
-        onClick={(e) => {
-          e.preventDefault();
-          onLike(blog.id);
-        }}
-      >
-        <Heart size={20} />
-      </button>
-
       {/* Dropdown Menu */}
       <div className="absolute top-7 right-2 flex gap-2 items-center z-10">
         <button
@@ -93,12 +80,13 @@ const BlogCard = ({ blog, onLike, onDelete, onPin }) => {
             ref={dropdownRef}
             className="absolute right-0 top-full bg-white border border-gray-300 rounded-lg shadow-lg z-50"
           >
-            <button className="flex items-center gap-2 p-2 text-gray-500 hover:bg-gray-100"
-            onClick={handleEditClick}
+            <button 
+              className="flex items-center gap-2 p-2 text-gray-500 hover:bg-gray-100"
+              onClick={handleEditClick}
             >
-            <Edit size={16} />
-           Edit
-           </button>
+              <Edit size={16} />
+              Edit
+            </button>
             <button
               className="flex items-center gap-2 p-2 text-gray-500 hover:bg-gray-100"
               onClick={handleDelete}
@@ -121,35 +109,57 @@ const BlogCard = ({ blog, onLike, onDelete, onPin }) => {
         )}
       </div>
 
-      {/* Blog Title */}
-      <h2 className="text-[#272829] text-xl mb-4">{capitalizeFirstWord(blog.title)}</h2>
+      {/* Content Container */}
+      <div className="flex-grow">
+        {/* Blog Title */}
+        <h2 className="text-[#272829] text-xl mb-4">{capitalizeFirstWord(blog.title)}</h2>
 
-      {/* Blog Content Preview */}
-      <p className="text-gray-500 mb-4 text-base line-clamp-3">{previewContent(blog.content)}</p>
+        {/* Blog Content Preview */}
+        <p className="text-gray-500 text-base line-clamp-3">{previewContent(blog.content)}</p>
+      </div>
 
-      {/* Blog Date */}
-      <span className="text-gray-500 text-sm">{formatDate(blog.date)}</span>
+      {/* Bottom Section Container */}
+      <div className="mt-auto pt-4">
+        {/* Date */}
+        <span className="block text-gray-500 text-sm mb-2">{formatDate(blog.date)}</span>
 
-      {/* Read More Button */}
-      <button
-        className="text-[#9575CD] mt-4 text-sm font-medium hover:text-[#9575CD]"
-        onClick={() => navigate(`/blogs/blog/${blog.id}`)}
-      >
-        Read More →
-      </button>
+        {/* Read More and Action Buttons */}
+        <div className="flex justify-between items-center">
+          <button
+            className="text-[#9575CD] text-sm font-medium hover:text-[#9575CD]"
+            onClick={() => navigate(`/blogs/blog/${blog.id}`)}
+          >
+            Read More →
+          </button>
 
-      {/* Pin Indicator */}
-      {blog.isPinned && (
-        <div
-          className="absolute bottom-5 right-11 p-2 flex items-center justify-center z-10 transition-transform duration-300 ease-in-out hover:scale-110 hover:bg-gray-100"
-          onClick={(e) => {
-            e.preventDefault();
-            onPin(blog.id);
-          }}
-        >
-          <Pin size={24} className="text-[#CC9CDA] w-5 h-5 transition-colors duration-300 ease-in-out hover:text-[#A97ECB]" />
+          <div className="flex items-center gap-2">
+            {blog.isPinned && (
+              <button
+                className="bg-none border-none cursor-pointer p-2 text-[#CC9CDA] transition-colors duration-300 ease-in-out hover:text-[#A97ECB]"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onPin(blog.id);
+                }}
+              >
+                <Pin size={20} />
+              </button>
+            )}
+            
+            <button
+  className={`bg-none border-none cursor-pointer p-2 text-gray-500 transition-colors duration-200 hover:text-[#FF4081] ${
+    blog.isLiked ? 'text-[#e91e63]' : ''
+  }`}
+  onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onLike(parseInt(blog.id)); // Ensure id is parsed as integer
+  }}
+>
+  <Heart size={20} />
+</button>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

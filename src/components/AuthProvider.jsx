@@ -1,44 +1,43 @@
-// AuthContext.jsx updates
-
 import { createContext, useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-  loadUser,
-  saveUser,
-  loadUsers,
-  saveUsers,
-  loadAuthState,
-  saveAuthState,
-  clearAllData
-} from '../utils/LocalStorage';
+import { AUTH_CONSTANTS } from './authConstants';
 
+// Create Authentication Context
 const AuthContext = createContext(null);
 
+// Authentication Provider Component
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => loadAuthState());
-  const [user, setUser] = useState(() => loadUser());
+  const [isAuthenticated, setIsAuthenticated] = useState(() => 
+    JSON.parse(localStorage.getItem(AUTH_CONSTANTS.STORAGE_KEYS.AUTH_STATE)) || false
+  );
+
+  const [user, setUser] = useState(() => 
+    JSON.parse(localStorage.getItem(AUTH_CONSTANTS.STORAGE_KEYS.USER)) || null
+  );
+
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    saveAuthState(isAuthenticated);
+    localStorage.setItem(AUTH_CONSTANTS.STORAGE_KEYS.AUTH_STATE, JSON.stringify(isAuthenticated));
   }, [isAuthenticated]);
 
   useEffect(() => {
     if (user) {
-      saveUser(user);
+      localStorage.setItem(AUTH_CONSTANTS.STORAGE_KEYS.USER, JSON.stringify(user));
     }
   }, [user]);
 
   const login = async (credentials) => {
     try {
-      const users = loadUsers();
+      const usersData = localStorage.getItem(AUTH_CONSTANTS.STORAGE_KEYS.USERS);
+      const users = usersData ? JSON.parse(usersData) : [];
+
       const existingUser = users.find(u => u.email === credentials.email);
 
       if (existingUser) {
         if (existingUser.password === credentials.password) {
           setUser(existingUser);
           setIsAuthenticated(true);
-          saveUser(existingUser);
           return { success: true, message: 'Login successful' };
         } else {
           return { success: false, message: 'Incorrect password' };
@@ -51,8 +50,7 @@ export const AuthProvider = ({ children }) => {
           createdAt: new Date().toISOString()
         };
         users.push(newUser);
-        saveUsers(users);
-        saveUser(newUser);
+        localStorage.setItem(AUTH_CONSTANTS.STORAGE_KEYS.USERS, JSON.stringify(users));
         setUser(newUser);
         setIsAuthenticated(true);
         return { success: true, message: 'Account created successfully' };
@@ -67,32 +65,36 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setIsAuthenticated(false);
     setError(null);
-    clearAllData(); // Clear all data on logout
+    localStorage.clear();
   };
 
   const updateUserProfile = (profileData) => {
     if (user) {
       const updatedUser = { ...user, profile: profileData };
       setUser(updatedUser);
-      saveUser(updatedUser);
       
-      const users = loadUsers();
+      const usersData = localStorage.getItem(AUTH_CONSTANTS.STORAGE_KEYS.USERS);
+      const users = usersData ? JSON.parse(usersData) : [];
       const updatedUsers = users.map(u => 
         u.email === user.email ? updatedUser : u
       );
-      saveUsers(updatedUsers);
+      
+      localStorage.setItem(AUTH_CONSTANTS.STORAGE_KEYS.USER, JSON.stringify(updatedUser));
+      localStorage.setItem(AUTH_CONSTANTS.STORAGE_KEYS.USERS, JSON.stringify(updatedUsers));
     }
-  }
+  };
+
+  const contextValue = { 
+    isAuthenticated, 
+    user, 
+    login, 
+    logout,
+    updateUserProfile,
+    error 
+  };
 
   return (
-    <AuthContext.Provider value={{ 
-      isAuthenticated, 
-      user, 
-      login, 
-      logout,
-      updateUserProfile,
-      error 
-    }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
@@ -102,4 +104,13 @@ AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export const useAuth = () => useContext(AuthContext);
+// Custom Hook for Authentication
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
+export default AuthProvider;

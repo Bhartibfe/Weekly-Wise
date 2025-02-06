@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { User, Calendar } from "lucide-react";
 import PropTypes from 'prop-types';
-import { useAuth } from './AuthContext';
+import { useAuth } from './AuthProvider';
 
 const Profile = ({ handleLogout }) => {
   const { user, updateUserProfile } = useAuth();
