@@ -19,11 +19,12 @@ const LikedBlogs = ({ blogs, onLike, onDelete, onPin }) => {
         </div>
 
         <BlogList 
-          blogs={likedBlogs}
-          onLike={onLike}
-          onDelete={onDelete}
-          onPin={onPin}
-        />
+  blogs={likedBlogs}
+  onLike={onLike}
+  onDelete={onDelete}
+  onPin={onPin}
+  showHeader={false}
+/>
       </div>
     </div>
   );
