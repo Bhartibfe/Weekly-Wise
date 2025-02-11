@@ -11,7 +11,7 @@ const SORT_OPTIONS = {
   REVERSE_ALPHABETICAL: 'reverseAlphabetical'
 };
 
-const BlogList = ({ blogs, onLike, onDelete = () => {}, onPin = () => {} }) => {
+const BlogList = ({ blogs, onLike, onDelete = () => {}, onPin = () => {}, showHeader = true }) => {
   const [filteredBlogs, setFilteredBlogs] = useState(blogs);
   const [sortOption, setSortOption] = useState(() => 
     localStorage.getItem('blogSortPreference') || SORT_OPTIONS.NEWEST
@@ -85,18 +85,19 @@ const BlogList = ({ blogs, onLike, onDelete = () => {}, onPin = () => {} }) => {
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-50 to-indigo-50">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Explore Our Blog
-          </h1>
-          <p className="text-lg text-gray-600">
-            Discover interesting stories and insights
-          </p>
-        </div>
+        {showHeader && (
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              Explore Our Blog
+            </h1>
+            <p className="text-lg text-gray-600">
+              Discover interesting stories and insights
+            </p>
+          </div>
+        )}
 
-          {/* Centered Search and Sort Controls */}
-          <div className="max-w-3xl mx-auto px-4 mb-8">
+        {/* Centered Search and Sort Controls */}
+        <div className="max-w-3xl mx-auto px-4 mb-8">
           <div className="flex items-center justify-center gap-4">
             <div className="w-96">
               <SearchBar 
@@ -180,7 +181,8 @@ BlogList.propTypes = {
   ).isRequired,
   onLike: PropTypes.func.isRequired,
   onDelete: PropTypes.func,
-  onPin: PropTypes.func
+  onPin: PropTypes.func,
+  showHeader: PropTypes.bool
 };
 
 export default BlogList;

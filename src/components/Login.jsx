@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
-import { AnimatedBackground } from 'animated-backgrounds';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -36,8 +35,7 @@ const Login = () => {
   };
   return (
     <div className="relative min-h-screen flex items-center justify-center ">
-      {/* Animated Background */}
-      <AnimatedBackground animationName="hyperspeed" style={{ zIndex: -1 }} />
+    
 
       <form
         className="bg-[#31363F] p-8 rounded-lg shadow-md w-80 space-y-6 relative"

@@ -1,7 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import QuillEditor from './QuillEditor';
 
 const CreateBlog = ({ onCreateBlog }) => {
   const navigate = useNavigate();
@@ -10,13 +9,6 @@ const CreateBlog = ({ onCreateBlog }) => {
     content: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleContentChange = useCallback((content) => {
-    setBlogData(prev => ({
-      ...prev,
-      content
-    }));
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,11 +53,14 @@ const CreateBlog = ({ onCreateBlog }) => {
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
         </div>
-        <div className="min-h-[400px]">
-          <QuillEditor
+        <div>
+          <textarea
+            placeholder="Blog Content"
             value={blogData.content}
-            onChange={handleContentChange}
+            onChange={(e) => setBlogData(prev => ({ ...prev, content: e.target.value }))}
+            required
             disabled={isSubmitting}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 min-h-[400px]"
           />
         </div>
         <div className="flex gap-4">

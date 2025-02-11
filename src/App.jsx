@@ -26,16 +26,14 @@ const App = () => {
               </PrivateRoute>
             }
           />
-          <Route path="/blogs/*" element={
-            <PrivateRoute>
-              <BlogsPage />
-            </PrivateRoute>
-          } />
-          <Route path="/blog/:id/*" element={
-            <PrivateRoute>
-              <BlogsPage />
-            </PrivateRoute>
-          } />
+         <Route 
+            path="/blogs/*" 
+            element={
+              <PrivateRoute>
+                <BlogsPage />
+              </PrivateRoute>
+            } 
+          />
           <Route
             path="/todo"
             element={
