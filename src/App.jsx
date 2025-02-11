@@ -1,11 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './components/AuthProvider'; // Updated import path
+import { AuthProvider } from './components/AuthProvider';
 import { PrivateRoute } from './components/PrivateRoute';
 import HomePage from './components/HomePage';
 import Login from './components/Login';
 import BlogsPage from './components/BlogsPage';
-import TodoPage from './components/Todopage';
-
+import TodoPage from './components/TodoPage';
 const ProjectPage = () => <div className="p-8">Project Planner Content</div>;
 const WeeklyPage = () => <div className="p-8">Weekly Planner Content</div>;
 const NotesPage = () => <div className="p-8">Notes Content</div>;
@@ -26,16 +25,14 @@ const App = () => {
               </PrivateRoute>
             }
           />
-          <Route path="/blogs/*" element={
-            <PrivateRoute>
-              <BlogsPage />
-            </PrivateRoute>
-          } />
-          <Route path="/blog/:id/*" element={
-            <PrivateRoute>
-              <BlogsPage />
-            </PrivateRoute>
-          } />
+          <Route 
+            path="/blogs/*" 
+            element={
+              <PrivateRoute>
+                <BlogsPage />
+              </PrivateRoute>
+            } 
+          />
           <Route
             path="/todo"
             element={
@@ -44,6 +41,7 @@ const App = () => {
               </PrivateRoute>
             }
           />
+          {/* Other routes remain the same */}
           <Route
             path="/project"
             element={

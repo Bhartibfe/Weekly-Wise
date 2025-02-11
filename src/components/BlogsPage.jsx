@@ -103,7 +103,7 @@ const BlogsPage = () => {
             </span>
           </Link>
           
-          <Link to="/create" className="group flex items-center hover:text-blue-600 transition-colors duration-200">
+          <Link to="/blogs/create" className="group flex items-center hover:text-blue-600 transition-colors duration-200">
             <PenTool size={20} className="group-hover:text-blue-500 transition-colors duration-200" />
             <span className="ml-2 relative">
               Create
@@ -111,7 +111,7 @@ const BlogsPage = () => {
             </span>
           </Link>
           
-          <Link to="/likes" className="group flex items-center hover:text-blue-600 transition-colors duration-200">
+          <Link to="likes" className="group flex items-center hover:text-blue-600 transition-colors duration-200">
             <Heart size={20} className="group-hover:text-blue-500 transition-colors duration-200" />
             <span className="ml-2 relative">
               Likes
@@ -122,18 +122,19 @@ const BlogsPage = () => {
       </div>
     </header>
       <Routes>
-        <Route 
-          path="/" 
-          element={
-            <BlogList 
-              blogs={blogs}
-              onLike={handleToggleLike}
-              onDelete={handleDeleteBlog}
-              onPin={handleTogglePin}
-              onUpdateBlog={handleUpdateBlog}
-            />
-          } 
-        />
+      <Route 
+    index 
+    element={
+      <BlogList 
+        blogs={blogs}
+        onLike={handleToggleLike}
+        onDelete={handleDeleteBlog}
+        onPin={handleTogglePin}
+        onUpdateBlog={handleUpdateBlog}
+      />
+    } 
+  />
+
         <Route 
           path="/create" 
           element={<CreateBlog onCreateBlog={handleCreateBlog} />} 
