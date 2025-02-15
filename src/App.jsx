@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './components/AuthProvider'; // Updated import path
+import { AuthProvider } from './components/AuthProvider';
 import { PrivateRoute } from './components/PrivateRoute';
+import Layout from './components/Layout';
 import HomePage from './components/HomePage';
 import Login from './components/Login';
 import BlogsPage from './components/BlogsPage';
@@ -22,23 +23,29 @@ const App = () => {
             path="/"
             element={
               <PrivateRoute>
-                <HomePage />
+                <Layout>
+                  <HomePage />
+                </Layout>
               </PrivateRoute>
             }
           />
-         <Route 
-            path="/blogs/*" 
+          <Route
+            path="/blogs/*"
             element={
               <PrivateRoute>
-                <BlogsPage />
+                <Layout>
+                  <BlogsPage />
+                </Layout>
               </PrivateRoute>
-            } 
+            }
           />
           <Route
             path="/todo"
             element={
               <PrivateRoute>
-                <TodoPage />
+                <Layout>
+                  <TodoPage />
+                </Layout>
               </PrivateRoute>
             }
           />
@@ -46,7 +53,9 @@ const App = () => {
             path="/project"
             element={
               <PrivateRoute>
-                <ProjectPage />
+                <Layout>
+                  <ProjectPage />
+                </Layout>
               </PrivateRoute>
             }
           />
@@ -54,7 +63,9 @@ const App = () => {
             path="/weekly"
             element={
               <PrivateRoute>
-                <WeeklyPage />
+                <Layout>
+                  <WeeklyPage />
+                </Layout>
               </PrivateRoute>
             }
           />
@@ -62,7 +73,9 @@ const App = () => {
             path="/notes"
             element={
               <PrivateRoute>
-                <NotesPage />
+                <Layout>
+                  <NotesPage />
+                </Layout>
               </PrivateRoute>
             }
           />
@@ -70,7 +83,9 @@ const App = () => {
             path="/habit"
             element={
               <PrivateRoute>
-                <HabitPage />
+                <Layout>
+                  <HabitPage />
+                </Layout>
               </PrivateRoute>
             }
           />
@@ -78,7 +93,9 @@ const App = () => {
             path="/holiday"
             element={
               <PrivateRoute>
-                <HolidayPage />
+                <Layout>
+                  <HolidayPage />
+                </Layout>
               </PrivateRoute>
             }
           />

@@ -1,16 +1,24 @@
 import { useNavigate } from 'react-router-dom';
-import { Heart, Edit, Trash2, MoreVertical, Pin } from 'lucide-react';
+import { Heart, Edit, Trash2, MoreVertical, Pin, Clock } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 const BlogCard = ({ blog, onLike, onDelete, onPin }) => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
+  const buttonRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      // Check if click is outside both the dropdown and the toggle button
+      if (
+        dropdownRef.current && 
+        !dropdownRef.current.contains(event.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
+      ) {
         setShowDropdown(false);
       }
     };
@@ -21,6 +29,7 @@ const BlogCard = ({ blog, onLike, onDelete, onPin }) => {
 
   const handleDelete = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     if (window.confirm('Are you sure you want to delete this blog?')) {
       onDelete(blog.id);
     }
@@ -57,106 +66,134 @@ const BlogCard = ({ blog, onLike, onDelete, onPin }) => {
 
   const handleEditClick = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     navigate(`/blogs/edit/${blog.id}`);
     setShowDropdown(false);
   };
 
   return (
     <div
-      className={`relative bg-white rounded-lg p-6 shadow-md overflow-hidden transition-transform duration-200 hover:translate-y-[-2px] flex flex-col min-h-[200px] ${
-        blog.isPinned ? 'border-2 border-[#c49fe7] bg-[#f8f9fa]' : ''
-      }`}
-    >
-      {/* Dropdown Menu */}
-      <div className="absolute top-7 right-2 flex gap-2 items-center z-10">
-        <button
-          className="bg-none border-none cursor-pointer p-2 text-gray-500 hover:text-[#2196F3]"
-          onClick={() => setShowDropdown(!showDropdown)}
-        >
-          <MoreVertical size={20} />
-        </button>
-        {showDropdown && (
-          <div
-            ref={dropdownRef}
-            className="absolute right-0 top-full bg-white border border-gray-300 rounded-lg shadow-lg z-50"
-          >
-            <button 
-              className="flex items-center gap-2 p-2 text-gray-500 hover:bg-gray-100"
-              onClick={handleEditClick}
-            >
-              <Edit size={16} />
-              Edit
-            </button>
+  className={`group relative p-6 rounded-2xl shadow-lg overflow-visible transition-all duration-300 
+    ${isHovered ? 'shadow-xl transform -translate-y-1' : ''} 
+    ${blog.isPinned 
+      ? 'bg-purple-50/70 border-2 border-purple-200' 
+      : 'bg-white/90 backdrop-blur-sm'}`}
+  onMouseEnter={() => setIsHovered(true)}
+  onMouseLeave={() => setIsHovered(false)}
+>
+      {/* Decorative blob */}
+      <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-purple-100/20 via-pink-100/20 to-blue-100/20 rounded-full blur-2xl transform rotate-45 transition-transform duration-500 group-hover:rotate-90"/>
+      
+      {/* Content */}
+      <div className="relative z-10">
+        <div className="flex justify-between items-start mb-4">
+          <h2 className="text-xl font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            {capitalizeFirstWord(blog.title)}
+          </h2>
+          
+          {/* More button and dropdown */}
+          <div className="relative">
             <button
-              className="flex items-center gap-2 p-2 text-gray-500 hover:bg-gray-100"
-              onClick={handleDelete}
-            >
-              <Trash2 size={16} />
-              Delete
-            </button>
-            <button
-              className="flex items-center gap-2 p-2 text-gray-500 hover:bg-gray-100"
+              ref={buttonRef}
+              className="p-2 text-gray-400 hover:text-purple-500 transition-colors duration-200"
               onClick={(e) => {
                 e.preventDefault();
-                onPin(blog.id);
-                setShowDropdown(false);
+                e.stopPropagation();
+                setShowDropdown(!showDropdown);
               }}
             >
-              <Pin size={16} />
-              <span>{blog.isPinned ? 'Unpin' : 'Pin'}</span>
+              <MoreVertical size={18} />
             </button>
-          </div>
-        )}
-      </div>
-
+          {showDropdown && (
+            <div
+              ref={dropdownRef}
+              className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 w-28"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button 
+                className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:bg-purple-50 w-full transition-colors"
+                onClick={handleEditClick}
+              >
+                <Edit size={14} />
+                Edit
+              </button>
+              <button
+                className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:bg-red-50 w-full transition-colors"
+                onClick={handleDelete}
+              >
+                <Trash2 size={14} />
+                Delete
+              </button>
+              <button
+                className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:bg-purple-50 w-full transition-colors"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onPin(blog.id);
+                  setShowDropdown(false);
+                }}
+              >
+                <Pin size={14} />
+                {blog.isPinned ? 'Unpin' : 'Pin'}
+              </button>
+            </div>
+          )}
+        </div>
+        </div>
+        </div>
+        
       {/* Content Container */}
-      <div className="flex-grow">
-        {/* Blog Title */}
-        <h2 className="text-[#272829] text-xl mb-4">{capitalizeFirstWord(blog.title)}</h2>
+      <div className="flex-grow relative z-0">
 
         {/* Blog Content Preview */}
-        <p className="text-gray-500 text-base line-clamp-3">{previewContent(blog.content)}</p>
+        <p className="text-gray-600 text-base line-clamp-3">{previewContent(blog.content)}</p>
       </div>
 
       {/* Bottom Section Container */}
-      <div className="mt-auto pt-4">
+      <div className="mt-auto pt-4 relative z-0">
         {/* Date */}
-        <span className="block text-gray-500 text-sm mb-2">{formatDate(blog.date)}</span>
+        <div className="flex items-center gap-2 text-gray-500 mb-2">
+          <Clock size={16} />
+          <span className="text-sm">{formatDate(blog.date)}</span>
+        </div>
 
         {/* Read More and Action Buttons */}
         <div className="flex justify-between items-center">
           <button
-            className="text-[#9575CD] text-sm font-medium hover:text-[#9575CD]"
+            className="px-4 py-2 text-[#9575CD] font-medium rounded-full 
+              bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 
+              transition-all duration-300"
             onClick={() => navigate(`/blogs/blog/${blog.id}`)}
           >
             Read More →
           </button>
 
           <div className="flex items-center gap-2">
-            {blog.isPinned && (
-              <button
-                className="bg-none border-none cursor-pointer p-2 text-[#CC9CDA] transition-colors duration-300 ease-in-out hover:text-[#A97ECB]"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onPin(blog.id);
-                }}
-              >
-                <Pin size={20} />
-              </button>
-            )}
-            
+          {blog.isPinned && (
+  <button
+    className="bg-purple-200 rounded-full p-2 text-purple-700 duration-300 hover:bg-purple-300"
+    onClick={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onPin(blog.id);
+    }}
+  >
+    <Pin size={20} className="fill-purple-100" />
+  </button>
+)}
             <button
-  className={`bg-none border-none cursor-pointer p-2 text-gray-500 transition-colors duration-200 hover:text-[#FF4081] ${
-    blog.isLiked ? 'text-[#e91e63]' : ''
-  }`}
-  onClick={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onLike(parseInt(blog.id)); // Ensure id is parsed as integer
-  }}
->
-  <Heart size={20} />
-</button>
+              className={`rounded-full p-2 transition-all duration-300 
+                ${blog.isLiked 
+                  ? 'bg-pink-50 text-pink-500 hover:bg-pink-100' 
+                  : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onLike(parseInt(blog.id));
+              }}
+            >
+              <Heart size={20} className={blog.isLiked ? 'fill-current' : ''} />
+            </button>
           </div>
         </div>
       </div>

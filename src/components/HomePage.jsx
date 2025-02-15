@@ -1,122 +1,45 @@
-import { useState } from 'react';
+//import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronDown, ChevronsRight, Menu, Home } from 'lucide-react';
-import Profile from './Profile';
-import { useAuth } from './AuthProvider'; // Add this import
+import { BookOpen, CheckSquare, Layout, Calendar, FileText, Activity, Plane } from 'lucide-react';
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const { logout } = useAuth(); // Get logout from useAuth
-  const [activeSection, setActiveSection] = useState(null);
-  const [showContent, setShowContent] = useState(true);
-  const [sidebarVisible, setSidebarVisible] = useState(true);
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   const menuItems = [
-    { name: 'blogs', path: '/blogs' },
-    { name: 'to do list', path: '/todo' },
-    { name: 'Project planer', path: '/project' },
-    { name: 'weekly planer', path: '/weekly' },
-    { name: 'Notes', path: '/notes' },
-    { name: 'Habit tracker', path: '/habit' },
-    { name: 'Holiday planer', path: '/holiday' },
+    { name: 'Blogs', path: '/blogs', icon: BookOpen },
+    { name: 'To Do List', path: '/todo', icon: CheckSquare },
+    { name: 'Project Planner', path: '/project', icon: Layout },
+    { name: 'Weekly Planner', path: '/weekly', icon: Calendar },
+    { name: 'Notes', path: '/notes', icon: FileText },
+    { name: 'Habit Tracker', path: '/habit', icon: Activity },
+    { name: 'Holiday Planner', path: '/holiday', icon: Plane },
   ];
-
-  const sections = ['Create', 'Important', 'Confidential'];
-
-  const handleSectionClick = (section) => {
-    if (activeSection === section) {
-      setActiveSection(null);
-    } else {
-      setActiveSection(section);
-      setShowContent(true);
-    }
-  };
-
-  const toggleSidebar = () => {
-    setSidebarVisible((prev) => !prev);
-  };
 
   const handleItemClick = (path) => {
     navigate(path);
   };
 
   return (
-    <div className="min-h-screen bg-[url('src/assets/images/bgs.jpeg')] text-[#EEEEEE]">
-      {/* Navigation header */}
-      <header className="flex justify-between items-center p-4 bg-[#31363F] text-[#EEEEEE] border-b border-gray-700">
-        <div
-          className="text-2xl font-bold flex items-center cursor-pointer"
-          onClick={toggleSidebar}
-        >
-          <Menu className="inline-block mr-2" />
-        </div>
-        <h1 className="text-center text-4xl font-bold">Weekly Wise</h1>
-        <Profile handleLogout={handleLogout} />
-      </header>
-
-      <div className="flex">
-        {sidebarVisible && (
-          <aside className="w-64 bg-[#31363F] text-[#EEEEEE] border-r border-gray-700 min-h-screen p-4">
-            <div className="space-y-2">
-              <div 
-                className="font-medium flex items-center gap-2 px-2 py-1 hover:bg-[#76ABAE] hover:text-[#222831] rounded cursor-pointer"
-                onClick={() => navigate('/')}
+    <div className="p-8">
+      <div className="max-w-7xl mx-auto">
+        <main className="flex-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {menuItems.map((item) => (
+              <div
+                key={item.path}
+                className="group relative bg-white/80 backdrop-blur-sm rounded-xl border border-purple-100 p-6 h-48 flex flex-col items-center justify-center shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 hover:bg-gradient-to-br from-purple-500 to-pink-500"
+                onClick={() => handleItemClick(item.path)}
               >
-                <Home size={18} />
-                Home
+                <item.icon 
+                  size={32} 
+                  className="text-purple-500 group-hover:text-white mb-4 transition-colors"
+                />
+                <span className="text-lg font-medium text-gray-700 group-hover:text-white transition-colors">
+                  {item.name}
+                </span>
               </div>
-
-              {sections.map((section) => (
-                <div key={section} className="space-y-1">
-                  <div
-                    className="font-medium flex items-center gap-2 px-2 py-1 hover:bg-[#76ABAE] hover:text-[#222831] rounded cursor-pointer"
-                    onClick={() => handleSectionClick(section)}
-                  >
-                    {activeSection === section ? (
-                      <ChevronDown size={18} />
-                    ) : (
-                      <ChevronsRight size={18} />
-                    )}
-                    {section}
-                  </div>
-                  {activeSection === section && (
-                    <div className="ml-6 space-y-1">
-                      {menuItems.map((item) => (
-                        <div
-                          key={item.path}
-                          className="text-[#EEEEEE] hover:bg-[#76ABAE] hover:text-[#222831] px-2 py-1 rounded cursor-pointer"
-                          onClick={() => handleItemClick(item.path)}
-                        >
-                          {item.name}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </aside>
-        )}
-
-        <main className="flex-1 p-8">
-          {showContent && (
-            <div className="grid grid-cols-4 gap-6">
-              {menuItems.map((item) => (
-                <div
-                  key={item.path}
-                  className="bg-[#31363F] rounded-lg border border-gray-600 p-6 h-48 flex items-center justify-center shadow-sm hover:shadow-md transition-shadow cursor-pointer hover:bg-[#76ABAE] hover:text-[#222831]"
-                  onClick={() => handleItemClick(item.path)}
-                >
-                  <span className="text-lg">{item.name}</span>
-                </div>
-              ))}
-            </div>
-          )}
+            ))}
+          </div>
         </main>
       </div>
     </div>
