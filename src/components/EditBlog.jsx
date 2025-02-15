@@ -65,10 +65,10 @@ const EditBlog = ({ blogs, onUpdateBlog }) => {
   );
 
   return (
-    <div className="max-w-4xl mx-auto p-8 bg-gradient-to-br from-indigo-50 to-purple-100 rounded-lg shadow-lg">
+    <div className="max-w-4xl mx-auto p-8 bg-gradient-to-br from-pink-50 to-purple-100 rounded-lg shadow-lg">
       <form className="space-y-6" onSubmit={handleSubmit}>
-        <h2 className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
-          ✏️ Polish Your Masterpiece ✏️
+        <h2 className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
+          ✨ Edit Your Masterpiece ✨
         </h2>
         
         <div className="relative">
@@ -79,10 +79,10 @@ const EditBlog = ({ blogs, onUpdateBlog }) => {
             onChange={(e) => setBlogData(prev => ({ ...prev, title: e.target.value }))}
             required
             disabled={isSubmitting}
-            className="w-full px-6 py-3 border-2 border-indigo-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/80 backdrop-blur-sm text-indigo-800 font-medium placeholder:text-indigo-300"
+            className="w-full px-6 py-3 border-2 border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/80 backdrop-blur-sm text-purple-800 font-medium placeholder:text-purple-300"
           />
           <div className="absolute inset-y-0 left-2 flex items-center pointer-events-none">
-            <span className="text-indigo-400">🖋️</span>
+            <span className="text-purple-400">📝</span>
           </div>
         </div>
         
@@ -93,10 +93,10 @@ const EditBlog = ({ blogs, onUpdateBlog }) => {
             onChange={(e) => setBlogData(prev => ({ ...prev, content: e.target.value }))}
             required
             disabled={isSubmitting}
-            className="w-full px-6 py-4 border-2 border-indigo-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/80 backdrop-blur-sm text-indigo-800 min-h-[400px] resize-none placeholder:text-indigo-300"
+            className="w-full px-6 py-4 border-2 border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/80 backdrop-blur-sm text-purple-800 min-h-[400px] resize-none placeholder:text-purple-300"
           />
           <div className="absolute top-4 left-2 pointer-events-none">
-            <span className="text-indigo-400">📝</span>
+            <span className="text-purple-400">✍️</span>
           </div>
         </div>
         
@@ -104,15 +104,15 @@ const EditBlog = ({ blogs, onUpdateBlog }) => {
           <button
             type="button"
             onClick={() => navigate('/blogs')}
-            className="flex-1 px-6 py-3 border-2 border-indigo-400 text-indigo-600 font-medium rounded-lg hover:bg-indigo-50 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 flex items-center justify-center gap-2"
+            className="flex-1 px-6 py-3 border-2 border-purple-400 text-purple-600 font-medium rounded-lg hover:bg-purple-50 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 flex items-center justify-center gap-2"
             disabled={isSubmitting}
           >
             <span>Cancel</span>
             <span>🔙</span>
           </button>
           <button 
-            type="submit"
-            className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-6 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 disabled:opacity-70 font-medium shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+            type="submit" 
+            className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 disabled:opacity-70 font-medium shadow-md hover:shadow-lg flex items-center justify-center gap-2"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
@@ -126,7 +126,7 @@ const EditBlog = ({ blogs, onUpdateBlog }) => {
             ) : (
               <>
                 <span>Update Blog</span>
-                <span>✨</span>
+                <span>🚀</span>
               </>
             )}
           </button>
