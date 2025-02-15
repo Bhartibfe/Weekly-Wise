@@ -1,9 +1,10 @@
 // Header.jsx
 import { Menu } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import Profile from './Profile';
 import { useAuth } from './AuthProvider';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 const Header = ({ toggleSidebar }) => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const Header = ({ toggleSidebar }) => {
   };
 
   return (
-    <header className="sticky top-0 z-50 flex justify-between items-center p-4 bg-white shadow-lg relative">
+    <header className="sticky top-0 z-50 flex justify-between items-center p-4 bg-white shadow-lg">
       {/* Animated rainbow border */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 animate-gradient-x" />
       
