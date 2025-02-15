@@ -66,6 +66,7 @@ const CreateBlog = ({ onCreateBlog }) => {
             value={blogData.content}
             onChange={(e) => setBlogData(prev => ({ ...prev, content: e.target.value }))}
             required
+            
             disabled={isSubmitting}
             className="w-full px-6 py-4 border-2 border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/80 backdrop-blur-sm text-purple-800 min-h-[400px] resize-none placeholder:text-purple-300"
           />

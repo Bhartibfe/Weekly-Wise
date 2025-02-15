@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { Plus, X, Edit2, Smile } from 'lucide-react';
-//import Lottie from 'lottie-react';
-//import animationData from '../lotties/Animation - 1739560344164.json';
-const TodoPage = () => {
+
+const ToDoPage = () => {
   const initialColumns = {
     todo: {
       id: 'todo',
@@ -538,4 +537,4 @@ const TodoPage = () => {
   );
 };
 
-export default TodoPage;
+export default ToDoPage;
