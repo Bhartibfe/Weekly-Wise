@@ -5,7 +5,7 @@ import Layout from './components/Layout';
 import HomePage from './components/HomePage';
 import Login from './components/Login';
 import BlogsPage from './components/BlogsPage';;
-import TodoPage from './components/ToDoPage';
+import TodoPage from './components/TodoPage';
 const ProjectPage = () => <div className="p-8">Project Planner Content</div>;
 const WeeklyPage = () => <div className="p-8">Weekly Planner Content</div>;
 const NotesPage = () => <div className="p-8">Notes Content</div>;
