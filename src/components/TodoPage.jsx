@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { Plus, X, Edit2, Smile } from 'lucide-react';
 
-const ToDoPage = () => {
+const TodoPage = () => {
   const initialColumns = {
     todo: {
       id: 'todo',
@@ -537,4 +537,4 @@ const ToDoPage = () => {
   );
 };
 
-export default ToDoPage;
+export default TodoPage;

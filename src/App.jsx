@@ -4,9 +4,8 @@ import { PrivateRoute } from './components/PrivateRoute';
 import Layout from './components/Layout';
 import HomePage from './components/HomePage';
 import Login from './components/Login';
-import BlogsPage from './components/BlogsPage';
-import ToDoPage from './components/ToDoPage';
-// import TodoPage from './components/ToDoPage';
+import BlogsPage from './components/BlogsPage';;
+import TodoPage from './components/ToDoPage';
 const ProjectPage = () => <div className="p-8">Project Planner Content</div>;
 const WeeklyPage = () => <div className="p-8">Weekly Planner Content</div>;
 const NotesPage = () => <div className="p-8">Notes Content</div>;
@@ -44,7 +43,7 @@ const App = () => {
             element={
               <PrivateRoute>
                 <Layout>
-                  <ToDoPage/>
+                  <TodoPage/>
                 </Layout>
               </PrivateRoute>
             }
