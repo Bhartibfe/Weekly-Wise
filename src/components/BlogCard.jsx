@@ -12,7 +12,6 @@ const BlogCard = ({ blog, onLike, onDelete, onPin }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Check if click is outside both the dropdown and the toggle button
       if (
         dropdownRef.current && 
         !dropdownRef.current.contains(event.target) &&
@@ -23,9 +22,19 @@ const BlogCard = ({ blog, onLike, onDelete, onPin }) => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    // Only add the event listener when the dropdown is shown
+    if (showDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDropdown]); // Add showDropdown to dependency array
+
+  const handleCardClick = () => {
+    navigate(`/blogs/blog/${blog.id}`);
+  };
 
   const handleDelete = (e) => {
     e.preventDefault();
@@ -71,21 +80,24 @@ const BlogCard = ({ blog, onLike, onDelete, onPin }) => {
     setShowDropdown(false);
   };
 
+
   return (
     <div
-  className={`group relative p-6 rounded-2xl shadow-lg overflow-visible transition-all duration-300 
-    ${isHovered ? 'shadow-xl transform -translate-y-1' : ''} 
-    ${blog.isPinned 
-      ? 'bg-purple-50/70 border-2 border-purple-200' 
-      : 'bg-white/90 backdrop-blur-sm'}`}
-  onMouseEnter={() => setIsHovered(true)}
-  onMouseLeave={() => setIsHovered(false)}
->
+      onClick={handleCardClick}
+      className={`group relative p-6 rounded-2xl shadow-lg overflow-visible transition-all duration-300 
+        ${isHovered ? 'shadow-xl transform -translate-y-1' : ''} 
+        ${blog.isPinned ? 'bg-purple-50/70 border-2 border-purple-200' : 'bg-white/90 backdrop-blur-sm'}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        // Don't close dropdown on mouse leave
+      }}
+    >
       {/* Decorative blob */}
       <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-purple-100/20 via-pink-100/20 to-blue-100/20 rounded-full blur-2xl transform rotate-45 transition-transform duration-500 group-hover:rotate-90"/>
       
       {/* Content */}
-      <div className="relative z-10">
+      <div className="relative z-20"> {/* Increased z-index */}
         <div className="flex justify-between items-start mb-4">
           <h2 className="text-xl font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
             {capitalizeFirstWord(blog.title)}
@@ -104,43 +116,44 @@ const BlogCard = ({ blog, onLike, onDelete, onPin }) => {
             >
               <MoreVertical size={18} />
             </button>
-          {showDropdown && (
-            <div
-              ref={dropdownRef}
-              className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 w-28"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button 
-                className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:bg-purple-50 w-full transition-colors"
-                onClick={handleEditClick}
+            
+            {showDropdown && (
+              <div
+                ref={dropdownRef}
+                className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 w-28"
+                onClick={(e) => e.stopPropagation()}
               >
-                <Edit size={14} />
-                Edit
-              </button>
-              <button
-                className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:bg-red-50 w-full transition-colors"
-                onClick={handleDelete}
-              >
-                <Trash2 size={14} />
-                Delete
-              </button>
-              <button
-                className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:bg-purple-50 w-full transition-colors"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  onPin(blog.id);
-                  setShowDropdown(false);
-                }}
-              >
-                <Pin size={14} />
-                {blog.isPinned ? 'Unpin' : 'Pin'}
-              </button>
-            </div>
-          )}
+                <button 
+                  className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:bg-purple-50 w-full transition-colors"
+                  onClick={handleEditClick}
+                >
+                  <Edit size={14} />
+                  Edit
+                </button>
+                <button
+                  className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:bg-red-50 w-full transition-colors"
+                  onClick={handleDelete}
+                >
+                  <Trash2 size={14} />
+                  Delete
+                </button>
+                <button
+                  className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:bg-purple-50 w-full transition-colors"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onPin(blog.id);
+                    setShowDropdown(false);
+                  }}
+                >
+                  <Pin size={14} />
+                  {blog.isPinned ? 'Unpin' : 'Pin'}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-        </div>
-        </div>
+      </div>
         
       {/* Content Container */}
       <div className="flex-grow relative z-0">

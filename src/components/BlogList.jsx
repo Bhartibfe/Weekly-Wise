@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import BlogCard from './BlogCard';
 import { ArrowUpDown } from 'lucide-react';
@@ -14,7 +14,15 @@ const SORT_OPTIONS = {
 };
 
 const BlogList = ({ blogs, onLike, onDelete = () => {}, onPin = () => {}, showHeader = true }) => {
-  const [filteredBlogs, setFilteredBlogs] = useState(blogs);
+  // Use useMemo to prevent recreation of processedBlogs on every render
+  const processedBlogs = useMemo(() => {
+    return blogs.map(blog => ({
+      ...blog,
+      id: Number(blog.id) // Convert string ID to number
+    }));
+  }, [blogs]);
+
+  const [filteredBlogs, setFilteredBlogs] = useState(processedBlogs);
   const [sortOption, setSortOption] = useState(() => 
     localStorage.getItem('blogSortPreference') || SORT_OPTIONS.NEWEST
   );
@@ -32,6 +40,12 @@ const BlogList = ({ blogs, onLike, onDelete = () => {}, onPin = () => {}, showHe
         blog.content.toLowerCase().includes(searchLower)
       );
     }
+    
+    // Ensure IDs are numbers, but don't generate new keys on every render
+    filtered = filtered.map(blog => ({
+      ...blog,
+      id: Number(blog.id) // Ensure ID is a number
+    }));
     
     // Separate pinned and unpinned blogs
     const pinnedBlogs = filtered.filter(blog => blog.isPinned);
@@ -61,9 +75,9 @@ const BlogList = ({ blogs, onLike, onDelete = () => {}, onPin = () => {}, showHe
   }, [sortOption]);
 
   useEffect(() => {
-    const filtered = filterAndSortBlogs(blogs, searchTerm);
+    const filtered = filterAndSortBlogs(processedBlogs, searchTerm);
     setFilteredBlogs(filtered);
-  }, [blogs, filterAndSortBlogs, searchTerm]);
+  }, [processedBlogs, filterAndSortBlogs, searchTerm]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -86,13 +100,12 @@ const BlogList = ({ blogs, onLike, onDelete = () => {}, onPin = () => {}, showHe
     setShowSortMenu(false);
   };
 
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100/50 via-pink-50/50 to-blue-100/50">
       <div className="container mx-auto px-4 py-8">
         {showHeader && (
           <div className="relative mb-12">
-            {/* Navigation moved to top right */}
+            {/* Navigation */}
             <div className="absolute top-0 right-0">
               <nav className="flex gap-4 items-center">
                 <Link to="/" className="group flex items-center transition-all duration-300 hover:scale-105">
@@ -113,7 +126,7 @@ const BlogList = ({ blogs, onLike, onDelete = () => {}, onPin = () => {}, showHe
                   </div>
                 </Link>
 
-                <Link to="likes" className="group flex items-center transition-all duration-300 hover:scale-105">
+                <Link to="/likes" className="group flex items-center transition-all duration-300 hover:scale-105">
                   <div className="relative p-2 rounded-lg bg-gradient-to-r from-blue-100 to-purple-100 group-hover:from-blue-200 group-hover:to-purple-200">
                     <Heart size={20} className="text-blue-600 group-hover:text-blue-700" />
                     <span className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-sm font-medium text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -147,15 +160,15 @@ const BlogList = ({ blogs, onLike, onDelete = () => {}, onPin = () => {}, showHe
             
             <div className="relative">
               <button 
-              
                 className="flex items-center gap-2 px-4 py-2.5 bg-white/90 backdrop-blur-sm rounded-full 
                   shadow-sm border border-purple-100 text-purple-600 hover:bg-purple-50 
-                  transition-all duration-200 "
-                  onClick={() => setShowSortMenu(!showSortMenu)}
+                  transition-all duration-200"
+                onClick={() => setShowSortMenu(!showSortMenu)}
               >
                 <ArrowUpDown size={16} />
                 <span>Sort</span>
               </button>
+              
               {showSortMenu && (
                 <div 
                   className="absolute right-0 top-full mt-2 bg-white border border-gray-100 
@@ -182,32 +195,34 @@ const BlogList = ({ blogs, onLike, onDelete = () => {}, onPin = () => {}, showHe
             </div>
           </div>
         </div>
-
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredBlogs.length > 0 ? (
-              filteredBlogs.map(blog => (
-                <BlogCard 
-                  key={blog.id}
-                  blog={blog} 
-                  onLike={onLike} 
-                  onDelete={onDelete}
-                  onPin={onPin}
-                />
-              ))
-            ) : (
-              <div className="col-span-full flex items-center justify-center py-16">
-                <div className="text-center">
-                  <div className="text-4xl mb-4">✨</div>
-                  <p className="text-xl text-gray-600">
-                    No blogs found matching your search.
-                  </p>
-                </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredBlogs.length > 0 ? (
+            filteredBlogs.map(blog => (
+              <BlogCard 
+                key={blog.id.toString()} // Use the stable blog.id as the key
+                blog={{
+                  ...blog,
+                  id: Number(blog.id) // Ensure ID is passed as number
+                }} 
+                onLike={onLike} 
+                onDelete={onDelete}
+                onPin={onPin}
+              />
+            ))
+          ) : (
+            <div className="col-span-full flex items-center justify-center py-16">
+              <div className="text-center">
+                <div className="text-4xl mb-4">✨</div>
+                <p className="text-xl text-gray-600">
+                  No blogs found matching your search.
+                </p>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
+    </div>
     </div>
   );
 };
@@ -215,7 +230,7 @@ const BlogList = ({ blogs, onLike, onDelete = () => {}, onPin = () => {}, showHe
 BlogList.propTypes = {
   blogs: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired, // Allow both string and number
       title: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
       date: PropTypes.string.isRequired,
