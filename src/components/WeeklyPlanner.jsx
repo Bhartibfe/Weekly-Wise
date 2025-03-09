@@ -2,44 +2,109 @@ import { useState, useRef, useEffect } from 'react';
 import { format, addDays, startOfWeek, endOfWeek, eachDayOfInterval, addHours } from 'date-fns';
 
 const WeeklyPlanner = () => {
-  // State for current view date, events and tasks
+  // Initialize state with data from localStorage if available
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [events, setEvents] = useState([
-    { 
-      id: 1, 
-      title: 'Hackathon', 
-      start: new Date(2025, 1, 18, 9, 0), 
-      end: new Date(2025, 1, 18, 17, 0),
-      allDay: true,
-      color: '#9333EA' // Updated to more purple color
-    },
-    { 
-      id: 2, 
-      title: 'Gantt review + development', 
-      start: new Date(2025, 1, 18, 14, 0), 
-      end: new Date(2025, 1, 18, 15, 30),
-      color: '#A855F7' // Updated to match purple theme
-    },
-    { 
-      id: 3, 
-      title: 'Breakfast', 
-      start: new Date(2025, 1, 18, 9, 0), 
-      end: new Date(2025, 1, 18, 9, 30),
-      color: '#C084FC' // Light purple
+  const [events, setEvents] = useState(() => {
+    const savedEvents = localStorage.getItem('planner-events');
+    if (savedEvents) {
+      // Parse the events and convert date strings back to Date objects
+      const parsedEvents = JSON.parse(savedEvents);
+      return parsedEvents.map(event => ({
+        ...event,
+        start: new Date(event.start),
+        end: new Date(event.end)
+      }));
     }
-  ]);
+    return [
+      { 
+        id: 1, 
+        title: 'Hackathon', 
+        start: new Date(2025, 1, 18, 9, 0), 
+        end: new Date(2025, 1, 18, 17, 0),
+        allDay: true,
+        color: '#9333EA'
+      },
+      { 
+        id: 2, 
+        title: 'Gantt review + development', 
+        start: new Date(2025, 1, 18, 14, 0), 
+        end: new Date(2025, 1, 18, 15, 30),
+        color: '#A855F7'
+      },
+      { 
+        id: 3, 
+        title: 'Breakfast', 
+        start: new Date(2025, 1, 18, 9, 0), 
+        end: new Date(2025, 1, 18, 9, 30),
+        color: '#C084FC'
+      }
+    ];
+  });
+  
   const [isEditingEvent, setIsEditingEvent] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
-  const [tasks, setTasks] = useState({});
-  const [view, setView] = useState('week'); // Options: day, week
-  const [selectedDay, setSelectedDay] = useState(null);
-  const [timeRange, setTimeRange] = useState({ start: 8, end: 20 }); // Default 8 AM to 8 PM
+  
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem('planner-tasks');
+    return savedTasks ? JSON.parse(savedTasks) : {};
+  });
+  
+  const [view, setView] = useState(() => {
+    const savedView = localStorage.getItem('planner-view');
+    return savedView || 'week'; // Default to week view
+  });
+  
+  const [selectedDay, setSelectedDay] = useState(() => {
+    const savedDay = localStorage.getItem('planner-selected-day');
+    return savedDay ? new Date(savedDay) : null;
+  });
+  
+  const [timeRange, setTimeRange] = useState(() => {
+    const savedTimeRange = localStorage.getItem('planner-time-range');
+    return savedTimeRange ? JSON.parse(savedTimeRange) : { start: 8, end: 20 };
+  });
+  
   const [isAddingEvent, setIsAddingEvent] = useState(false);
   const [newEvent, setNewEvent] = useState(null);
   const [isEditingTask, setIsEditingTask] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const modalRef = useRef(null);
   const [removeOriginalTask, setRemoveOriginalTask] = useState(true);
+
+  // Save events to localStorage whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem('planner-events', JSON.stringify(events));
+    } catch (error) {
+      console.error('Could not save events to localStorage:', error);
+    }
+  }, [events]);
+
+  // Save tasks to localStorage whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem('planner-tasks', JSON.stringify(tasks));
+    } catch (error) {
+      console.error('Could not save tasks to localStorage:', error);
+    }
+  }, [tasks]);
+
+  // Save view preference to localStorage
+  useEffect(() => {
+    localStorage.setItem('planner-view', view);
+  }, [view]);
+
+  // Save selected day to localStorage
+  useEffect(() => {
+    if (selectedDay) {
+      localStorage.setItem('planner-selected-day', selectedDay.toISOString());
+    }
+  }, [selectedDay]);
+
+  // Save time range to localStorage
+  useEffect(() => {
+    localStorage.setItem('planner-time-range', JSON.stringify(timeRange));
+  }, [timeRange]);
 
   // Get the days for the current week
   const startDate = startOfWeek(currentDate, { weekStartsOn: 0 });
@@ -240,7 +305,7 @@ const WeeklyPlanner = () => {
     const end = addHours(start, 1);
     
     setNewEvent({
-      id: events.length + 1,
+      id: Date.now(),
       title: '',
       start,
       end,
@@ -305,6 +370,24 @@ const WeeklyPlanner = () => {
     setView(newView);
   };
 
+  // Function to clear all localStorage data
+  const clearAllData = () => {
+    if (window.confirm('Are you sure you want to clear all planner data? This cannot be undone.')) {
+      localStorage.removeItem('planner-events');
+      localStorage.removeItem('planner-tasks');
+      localStorage.removeItem('planner-view');
+      localStorage.removeItem('planner-selected-day');
+      localStorage.removeItem('planner-time-range');
+      
+      // Reset to default state
+      setEvents([]);
+      setTasks({});
+      setView('week');
+      setSelectedDay(null);
+      setTimeRange({ start: 8, end: 20 });
+    }
+  };
+
   return (
     <div className="p-8 bg-white/80 backdrop-blur-sm rounded-xl border border-purple-100 shadow-sm">
       {/* Header Section */}
@@ -341,19 +424,27 @@ const WeeklyPlanner = () => {
           </h2>
         </div>
         
-        <div className="absolute right-0 top-0 bg-white/80 p-1 rounded-full shadow-sm border border-purple-100 flex">
-          <button 
-            className={`px-4 py-2 rounded-full transition-all duration-300 font-medium ${view === 'day' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-sm' : 'hover:bg-purple-50'}`}
-            onClick={() => toggleView('day')}
+        <div className="flex space-x-2">
+          <button
+            onClick={clearAllData}
+            className="px-3 py-1.5 rounded-full bg-red-500 text-white font-semibold text-sm shadow-sm hover:bg-red-600 transition-all duration-300"
           >
-            Day
+            Reset Data
           </button>
-          <button 
-            className={`px-4 py-2 rounded-full transition-all duration-300 font-medium ${view === 'week' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-sm' : 'hover:bg-purple-50'}`}
-            onClick={() => toggleView('week')}
-          >
-            Week
-          </button>
+          <div className="bg-white/80 p-1 rounded-full shadow-sm border border-purple-100 flex">
+            <button 
+              className={`px-4 py-2 rounded-full transition-all duration-300 font-medium ${view === 'day' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-sm' : 'hover:bg-purple-50'}`}
+              onClick={() => toggleView('day')}
+            >
+              Day
+            </button>
+            <button 
+              className={`px-4 py-2 rounded-full transition-all duration-300 font-medium ${view === 'week' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-sm' : 'hover:bg-purple-50'}`}
+              onClick={() => toggleView('week')}
+            >
+              Week
+            </button>
+          </div>
         </div>
       </div>
 
@@ -587,18 +678,18 @@ const WeeklyPlanner = () => {
                 
                 return (
                   <div
-  key={idx}
-  className="absolute left-0 right-0 px-4 py-2 text-white text-sm rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 cursor-pointer"
-  style={{ 
-    ...style,
-    backgroundColor: event.color,
-    zIndex: 10
-  }}
-  onClick={() => {
-    setEditingEvent({...event});
-    setIsEditingEvent(true);
-  }}
->
+                    key={idx}
+                    className="absolute left-0 right-0 px-4 py-2 text-white text-sm rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 cursor-pointer"
+                    style={{ 
+                      ...style,
+                      backgroundColor: event.color,
+                      zIndex: 10
+                    }}
+                    onClick={() => {
+                      setEditingEvent({...event});
+                      setIsEditingEvent(true);
+                    }}
+                  >
                     <div className="font-bold">{event.title}</div>
                     <div className="text-xs flex items-center mt-1">
                       <span className="mr-1">⏰</span>
