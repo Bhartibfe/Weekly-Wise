@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import BlogList from './BlogList';
 import CreateBlog from './CreateBlog';
 import BlogView from './BlogView';
@@ -9,16 +9,33 @@ import LikedBlogs from './LikedBlogs';
 const BlogsPage = () => {
   const [blogs, setBlogs] = useState(() => {
     const savedBlogs = localStorage.getItem('blogs');
-    return savedBlogs ? JSON.parse(savedBlogs) : [
-      {
-        id: 1,
-        title: "Welcome to Your Blog",
-        content: "<p>This is your first blog post. Start writing your thoughts!</p>",
-        date: new Date().toISOString(),
-        isLiked: false,
-        isPinned: false
+    // Ensure default blog has all required properties and ID is a number
+    const defaultBlog = {
+      id: 1,
+      title: "Welcome to Your Blog",
+      content: "<p>This is your first blog post. Start writing your thoughts!</p>",
+      date: new Date().toISOString(),
+      isLiked: false,
+      isPinned: false
+    };
+    
+    if (savedBlogs) {
+      try {
+        // Parse saved blogs and ensure all items have required properties
+        const parsedBlogs = JSON.parse(savedBlogs);
+        return parsedBlogs.map(blog => ({
+          ...defaultBlog,  // Start with default values for all properties
+          ...blog,         // Override with actual blog data
+          id: Number(blog.id), // Ensure ID is a number
+          isLiked: typeof blog.isLiked === 'boolean' ? blog.isLiked : false,
+          isPinned: typeof blog.isPinned === 'boolean' ? blog.isPinned : false
+        }));
+      } catch (error) {
+        console.error("Error parsing saved blogs:", error);
+        return [defaultBlog];
       }
-    ];
+    }
+    return [defaultBlog];
   });
 
   useEffect(() => {
@@ -27,13 +44,13 @@ const BlogsPage = () => {
 
   const handleToggleLike = (id) => {
     setBlogs(prevBlogs => {
+      const numId = Number(id);
       const updatedBlogs = prevBlogs.map(blog => {
-        if (blog.id === Number(id)) {
+        if (blog.id === numId) {
           return { ...blog, isLiked: !blog.isLiked };
         }
         return blog;
       });
-      localStorage.setItem('blogs', JSON.stringify(updatedBlogs));
       return updatedBlogs;
     });
   };
@@ -41,7 +58,7 @@ const BlogsPage = () => {
   const handleCreateBlog = (newBlog) => {
     const blogToAdd = {
       ...newBlog,
-      id: Number(Date.now()),
+      id: Date.now(), // Use timestamp as a unique ID (already a number)
       date: new Date().toISOString(),
       isLiked: false,
       isPinned: false
@@ -52,8 +69,13 @@ const BlogsPage = () => {
   const handleUpdateBlog = (updatedBlog) => {
     setBlogs(prevBlogs => 
       prevBlogs.map(blog => 
-        blog.id === updatedBlog.id 
-          ? { ...blog, ...updatedBlog, date: new Date().toISOString() } 
+        blog.id === Number(updatedBlog.id) 
+          ? { 
+              ...blog, 
+              ...updatedBlog, 
+              id: Number(updatedBlog.id), // Ensure ID remains a number
+              date: new Date().toISOString() 
+            } 
           : blog
       )
     );
@@ -75,7 +97,7 @@ const BlogsPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100">
       {/* Main Content */}
       <div className="max-w-7xl mx-auto p-8">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 min-h-[calc(100vh-12rem)]">
+        
           <Routes>
             <Route 
               path="/" 
@@ -90,11 +112,11 @@ const BlogsPage = () => {
               } 
             />
             <Route 
-              path="/create" 
+              path="create" 
               element={<CreateBlog onCreateBlog={handleCreateBlog} />} 
             />
             <Route 
-              path="/blog/:id" 
+              path="blog/:id" 
               element={
                 <BlogView 
                   blogs={blogs}
@@ -106,7 +128,7 @@ const BlogsPage = () => {
               } 
             />
             <Route 
-              path="/edit/:id" 
+              path="edit/:id" 
               element={
                 <EditBlog 
                   blogs={blogs}
@@ -125,8 +147,13 @@ const BlogsPage = () => {
                 />
               } 
             />
+            {/* Add a catch-all redirect for /likes path */}
+            <Route 
+              path="/likes" 
+              element={<Navigate to="likes" replace />} 
+            />
           </Routes>
-        </div>
+       
       </div>
     </div>
   );

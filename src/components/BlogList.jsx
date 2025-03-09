@@ -14,11 +14,18 @@ const SORT_OPTIONS = {
 };
 
 const BlogList = ({ blogs, onLike, onDelete = () => {}, onPin = () => {}, showHeader = true }) => {
+  // Safely convert ID to number or use a string representation
+  const safelyProcessId = (id) => {
+    const numId = Number(id);
+    // Check if the conversion resulted in a valid number
+    return !isNaN(numId) ? numId : String(id);
+  };
+
   // Use useMemo to prevent recreation of processedBlogs on every render
   const processedBlogs = useMemo(() => {
     return blogs.map(blog => ({
       ...blog,
-      id: Number(blog.id) // Convert string ID to number
+      id: safelyProcessId(blog.id) // Safely convert ID
     }));
   }, [blogs]);
 
@@ -41,10 +48,10 @@ const BlogList = ({ blogs, onLike, onDelete = () => {}, onPin = () => {}, showHe
       );
     }
     
-    // Ensure IDs are numbers, but don't generate new keys on every render
+    // Ensure IDs are safely processed
     filtered = filtered.map(blog => ({
       ...blog,
-      id: Number(blog.id) // Ensure ID is a number
+      id: safelyProcessId(blog.id)
     }));
     
     // Separate pinned and unpinned blogs
@@ -198,18 +205,25 @@ const BlogList = ({ blogs, onLike, onDelete = () => {}, onPin = () => {}, showHe
         <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredBlogs.length > 0 ? (
-            filteredBlogs.map(blog => (
-              <BlogCard 
-                key={blog.id.toString()} // Use the stable blog.id as the key
-                blog={{
-                  ...blog,
-                  id: Number(blog.id) // Ensure ID is passed as number
-                }} 
-                onLike={onLike} 
-                onDelete={onDelete}
-                onPin={onPin}
-              />
-            ))
+            filteredBlogs.map(blog => {
+              // Generate a reliable key - use combination of id and title if needed
+              const blogKey = typeof blog.id === 'number' && !isNaN(blog.id) 
+                ? blog.id.toString() 
+                : `blog-${blog.title}-${Date.now()}`;
+                
+              return (
+                <BlogCard 
+                  key={blogKey}
+                  blog={{
+                    ...blog,
+                    id: safelyProcessId(blog.id) // Ensure ID is safely converted
+                  }} 
+                  onLike={onLike} 
+                  onDelete={onDelete}
+                  onPin={onPin}
+                />
+              );
+            })
           ) : (
             <div className="col-span-full flex items-center justify-center py-16">
               <div className="text-center">

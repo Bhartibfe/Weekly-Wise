@@ -1,11 +1,14 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { Heart, Edit, Trash2, Pin,Clock } from 'lucide-react';
+import { Heart, Edit, Trash2, Pin, Clock } from 'lucide-react';
 import PropTypes from 'prop-types';
 
 const BlogView = ({ blogs, onLike, onDelete, onPin }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const blog = blogs.find(blog => blog.id === Number(id));
+  
+  // First try to find by exact match, then try with number conversion
+  const blog = blogs.find(blog => blog.id === id) || 
+               blogs.find(blog => blog.id === Number(id));
 
   if (!blog) return (
     <div className="flex items-center justify-center h-[60vh]">
@@ -111,7 +114,16 @@ const BlogView = ({ blogs, onLike, onDelete, onPin }) => {
 };
 
 BlogView.propTypes = {
-  blogs: PropTypes.array.isRequired,
+  blogs: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      title: PropTypes.string.isRequired,
+      content: PropTypes.string.isRequired,
+      date: PropTypes.string.isRequired,
+      isLiked: PropTypes.bool.isRequired,
+      isPinned: PropTypes.bool.isRequired
+    })
+  ).isRequired,
   onLike: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onPin: PropTypes.func.isRequired,

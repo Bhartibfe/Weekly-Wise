@@ -216,16 +216,16 @@ const BlogCard = ({ blog, onLike, onDelete, onPin }) => {
 
 BlogCard.propTypes = {
   blog: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     title: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
     isLiked: PropTypes.bool.isRequired,
-    isPinned: PropTypes.bool.isRequired,
+    isPinned: PropTypes.bool.isRequired
   }).isRequired,
   onLike: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  onPin: PropTypes.func.isRequired,
+  onPin: PropTypes.func.isRequired
 };
 
 export default BlogCard;

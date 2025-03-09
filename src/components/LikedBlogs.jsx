@@ -22,7 +22,7 @@ const LikedBlogs = ({ blogs, onLike, onDelete, onPin }) => {
             <div className="mt-6 text-center p-8 bg-white/70 rounded-lg">
               <p className="text-purple-600 text-lg mb-4">You haven&apos;t liked any blogs yet</p>
               <Link 
-                to="/blogs"
+                to="/"
                 className="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
               >
                 Discover Blogs
@@ -50,7 +50,7 @@ const LikedBlogs = ({ blogs, onLike, onDelete, onPin }) => {
 LikedBlogs.propTypes = {
   blogs: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       title: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
       date: PropTypes.string.isRequired,

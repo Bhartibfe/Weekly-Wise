@@ -1,13 +1,13 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './components/AuthProvider';
 import { PrivateRoute } from './components/PrivateRoute';
 import Layout from './components/Layout';
 import HomePage from './components/HomePage';
 import Login from './components/Login';
-import BlogsPage from './components/BlogsPage';;
+import BlogsPage from './components/BlogsPage';
 import TodoPage from './components/TodoPage';
+import WeeklyPlanner from './components/WeeklyPlanner';
 const ProjectPage = () => <div className="p-8">Project Planner Content</div>;
-const WeeklyPage = () => <div className="p-8">Weekly Planner Content</div>;
 const NotesPage = () => <div className="p-8">Notes Content</div>;
 const HabitPage = () => <div className="p-8">Habit Tracker Content</div>;
 const HolidayPage = () => <div className="p-8">Holiday Planner Content</div>;
@@ -38,6 +38,11 @@ const App = () => {
               </PrivateRoute>
             }
           />
+          {/* Redirect /likes to /blogs/likes */}
+          <Route
+            path="/likes"
+            element={<Navigate to="/blogs/likes" replace />}
+          />
           <Route
             path="/todo"
             element={
@@ -48,7 +53,6 @@ const App = () => {
               </PrivateRoute>
             }
           />
-          {/* Other routes remain the same */}
           <Route
             path="/project"
             element={
@@ -64,7 +68,7 @@ const App = () => {
             element={
               <PrivateRoute>
                 <Layout>
-                  <WeeklyPage />
+                  <WeeklyPlanner />
                 </Layout>
               </PrivateRoute>
             }
