@@ -1,6 +1,5 @@
-//import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, CheckSquare, Layout, Calendar, FileText, Activity, Plane } from 'lucide-react';
+import { BookOpen, CheckSquare, Layout, Calendar, FileText, Activity, Plane, Link } from 'lucide-react';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -8,11 +7,13 @@ const HomePage = () => {
   const menuItems = [
     { name: 'Blogs', path: '/blogs', icon: BookOpen },
     { name: 'To Do List', path: '/todo', icon: CheckSquare },
-    { name: 'Project Planner', path: '/project', icon: Layout },
     { name: 'Weekly Planner', path: '/weekly', icon: Calendar },
     { name: 'Notes', path: '/notes', icon: FileText },
+    { name: 'Link', path: '/linkspage', icon: Link },
+    { name: 'Project Planner', path: '/project', icon: Layout },
     { name: 'Habit Tracker', path: '/habit', icon: Activity },
     { name: 'Holiday Planner', path: '/holiday', icon: Plane },
+    
   ];
 
   const handleItemClick = (path) => {

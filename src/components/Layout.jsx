@@ -1,4 +1,3 @@
-// Layout.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -11,7 +10,8 @@ import {
   FileText, 
   Activity, 
   Plane,
-  Home
+  Home,
+  Link
 } from 'lucide-react';
 // import Header from './Header';
 import PropTypes from 'prop-types';
@@ -25,11 +25,14 @@ const Layout = ({ children }) => {
   const menuItems = [
     { name: 'Blogs', path: '/blogs', icon: BookOpen },
     { name: 'To Do List', path: '/todo', icon: CheckSquare },
-    { name: 'Project Planner', path: '/project', icon: LayoutIcon },
     { name: 'Weekly Planner', path: '/weekly', icon: Calendar },
     { name: 'Notes', path: '/notes', icon: FileText },
+    { name: 'Links', path: '/linkspage', icon: Link },
+    { name: 'Project Planner', path: '/project', icon: LayoutIcon },
     { name: 'Habit Tracker', path: '/habit', icon: Activity },
     { name: 'Holiday Planner', path: '/holiday', icon: Plane },
+   
+ 
   ];
 
   const sections = ['Create', 'Important', 'Confidential'];

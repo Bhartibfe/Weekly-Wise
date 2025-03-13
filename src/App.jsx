@@ -7,8 +7,10 @@ import Login from './components/Login';
 import BlogsPage from './components/BlogsPage';
 import TodoPage from './components/TodoPage';
 import WeeklyPlanner from './components/WeeklyPlanner';
+import NotesPage from './components/NotesPage';
+import NoteEditor from './components/NoteEditor';
+import LinksPage from './components/LinksPage';
 const ProjectPage = () => <div className="p-8">Project Planner Content</div>;
-const NotesPage = () => <div className="p-8">Notes Content</div>;
 const HabitPage = () => <div className="p-8">Habit Tracker Content</div>;
 const HolidayPage = () => <div className="p-8">Holiday Planner Content</div>;
 
@@ -73,12 +75,23 @@ const App = () => {
               </PrivateRoute>
             }
           />
+          {/* Notes routes */}
           <Route
             path="/notes"
             element={
               <PrivateRoute>
                 <Layout>
                   <NotesPage />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/notes/:id"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <NoteEditor />
                 </Layout>
               </PrivateRoute>
             }
@@ -99,6 +112,16 @@ const App = () => {
               <PrivateRoute>
                 <Layout>
                   <HolidayPage />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/linkspage"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <LinksPage />
                 </Layout>
               </PrivateRoute>
             }

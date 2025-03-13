@@ -237,7 +237,7 @@ const TodoPage = () => {
     setShowModal(false);
   };
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 p-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
         <div className="w-12 h-12">
