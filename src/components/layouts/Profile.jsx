@@ -36,21 +36,15 @@ const Profile = ({ handleLogout }) => {
 	});
 
 	useEffect(() => {
-		if (user?.email && user.email !== savedProfile.email) {
-			setSavedProfile((prev) => ({
-				...prev,
-				email: user.email,
-			}));
-			setTempProfile((prev) => ({
-				...prev,
-				email: user.email,
-			}));
+		if (!user) return; // don't run if user is null
+		if (user.email !== savedProfile.email) {
+			setSavedProfile((prev) => ({ ...prev, email: user.email }));
+			setTempProfile((prev) => ({ ...prev, email: user.email }));
 		}
-	}, [user.email, savedProfile.email]);
+	}, [user, savedProfile.email]);
 
 	const [tempProfile, setTempProfile] = useState({ ...savedProfile });
 	const fileInputRef = useRef(null);
-
 	useEffect(() => {
 		if (tempProfile.birthDate) {
 			const calculatedAge = calculateAge(tempProfile.birthDate);
