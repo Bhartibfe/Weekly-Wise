@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
+    "@radix-ui/react-slot": "^1.2.3",
     "animated-backgrounds": "^1.1.0",
     "date-fns": "^4.1.0",
+    "gsap": "^3.13.0",
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.469.0",
     "postprocessing": "^6.36.6",
