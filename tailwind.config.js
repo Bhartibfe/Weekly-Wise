@@ -1,14 +1,14 @@
-import { fontFamily } from "tailwindcss/defaultTheme"
- 
+import { fontFamily } from "tailwindcss/defaultTheme";
+
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: 'class', 
+  darkMode: "class",
   content: [
-    './pages/**/*.{ts,tsx,js,jsx}',
-    './components/**/*.{ts,tsx,js,jsx}',
-    './app/**/*.{ts,tsx,js,jsx}',
-    './src/**/*.{ts,tsx,js,jsx}',
-	],
+    "./pages/**/*.{ts,tsx,js,jsx}",
+    "./components/**/*.{ts,tsx,js,jsx}",
+    "./app/**/*.{ts,tsx,js,jsx}",
+    "./src/**/*.{ts,tsx,js,jsx}",
+  ],
   theme: {
     container: {
       center: true,
@@ -37,5 +37,5 @@ export default {
       },
     },
   },
- // plugins: [require("tailwindcss-animate")],
-}
+  // plugins: [require("tailwindcss-animate")],
+};

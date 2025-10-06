@@ -17,12 +17,13 @@
     "gsap": "^3.13.0",
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.469.0",
+    "ogl": "^1.0.11",
     "postprocessing": "^6.36.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-quill": "^2.0.0",
     "react-router-dom": "^7.1.1",
-    "three": "^0.172.0",
+    "three": "^0.167.1",
     "weekly-wise": "file:"
   },
   "devDependencies": {
