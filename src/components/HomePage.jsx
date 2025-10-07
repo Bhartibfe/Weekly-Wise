@@ -1,58 +1,72 @@
 import { useNavigate } from "react-router-dom";
-import SpotlightCard from "./ui/SpotlightCard";
-
+import MagicBento from "./ui/MagicBento";
 import {
   BookOpen,
   CheckSquare,
-  //Layout,
   Calendar,
   FileText,
   Link,
   Plane,
 } from "lucide-react";
 
+const cardData = [
+  {
+    title: "Blogs",
+    description: "Read latest posts",
+    icon: BookOpen,
+    path: "/blogs",
+  },
+  {
+    title: "Task List",
+    description: "Track your tasks",
+    icon: CheckSquare,
+    path: "/todo",
+  },
+  {
+    title: "Weekly Planner",
+    description: "Plan your week",
+    icon: Calendar,
+    path: "/weekly",
+  },
+  {
+    title: "Notes",
+    description: "Keep your notes",
+    icon: FileText,
+    path: "/notes",
+  },
+  {
+    title: "Links",
+    description: "Your quick links",
+    icon: Link,
+    path: "/linkspage",
+  },
+  {
+    title: "Trip Planner",
+    description: "Plan your trips",
+    icon: Plane,
+    path: "/project",
+  },
+];
+
 const HomePage = () => {
   const navigate = useNavigate();
 
-  const menuItems = [
-    { name: "Blogs", path: "/blogs", icon: BookOpen },
-    { name: "Task List", path: "/todo", icon: CheckSquare },
-    { name: "Weekly Planner", path: "/weekly", icon: Calendar },
-    { name: "Notes", path: "/notes", icon: FileText },
-    { name: "Link", path: "/linkspage", icon: Link },
-    { name: "Trip Planner", path: "/project", icon: Plane },
-  ];
-
-  const handleItemClick = (path) => {
-    navigate(path);
-  };
-
   return (
     <div className="p-8">
-      <div className="max-w-7xl mx-auto">
-        <main className="flex-1">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {menuItems.map((item) => (
-              <SpotlightCard
-                key={item.path}
-                className="custom-spotlight-card cursor-pointer border
-				 border-purple-300 hover:border-purple-400 rounded-xl transition-colors"
-                spotlightColor="rgba(230, 230, 250, 0.2)"
-                onClick={() => handleItemClick(item.path)}
-              >
-                <div className="flex flex-col items-center justify-center h-48">
-                  <item.icon
-                    size={32}
-                    className="text-purple-500 group-hover:text-white mb-4 transition-colors"
-                  />
-                  <span className="text-lg font-medium text-white group-hover:text-white transition-colors">
-                    {item.name}
-                  </span>
-                </div>
-              </SpotlightCard>
-            ))}
-          </div>
-        </main>
+      <div className="max-w-7xl mx-auto w-full h-full flex-1">
+        <MagicBento
+          cards={cardData}
+          enableStars
+          enableSpotlight
+          enableBorderGlow
+          enableTilt
+          clickEffect
+          enableMagnetism
+          textAutoHide={false}
+          particleCount={12}
+          glowColor="180, 120, 255"
+          onCardClick={(path) => navigate(path)} // ✅ pass callback here
+        />
       </div>
     </div>
   );
