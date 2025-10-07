@@ -4,8 +4,8 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 export default function LiquidEther({
-  mouseForce = 20,
-  cursorSize = 100,
+  mouseForce = 7,
+  cursorSize = 80,
   isViscous = false,
   viscous = 30,
   iterationsViscous = 32,
