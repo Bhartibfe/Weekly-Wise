@@ -1,17 +1,8 @@
-import {
-  BookOpen,
-  CheckSquare,
-  Layout as LayoutIcon,
-  Calendar,
-  FileText,
-  Link,
-} from "lucide-react";
-
 export const menuItems = [
-  { name: "Blogs", path: "/blogs", icon: BookOpen },
-  { name: "To Do List", path: "/todo", icon: CheckSquare },
-  { name: "Weekly Planner", path: "/weekly", icon: Calendar },
-  { name: "Notes", path: "/notes", icon: FileText },
-  { name: "Links", path: "/linkspage", icon: Link },
-  { name: "Project Planner", path: "/project", icon: LayoutIcon },
+  { name: "Blogs", path: "/blogs" },
+  { name: "Task List", path: "/todo" },
+  { name: "Weekly Planner", path: "/weekly" },
+  { name: "Notes", path: "/notes" },
+  { name: "Links", path: "/linkspage" },
+  { name: "Trip Planner", path: "/project" },
 ];

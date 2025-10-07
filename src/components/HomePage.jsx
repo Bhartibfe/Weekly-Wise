@@ -4,10 +4,11 @@ import SpotlightCard from "./ui/SpotlightCard";
 import {
   BookOpen,
   CheckSquare,
-  Layout,
+  //Layout,
   Calendar,
   FileText,
   Link,
+  Plane,
 } from "lucide-react";
 
 const HomePage = () => {
@@ -15,11 +16,11 @@ const HomePage = () => {
 
   const menuItems = [
     { name: "Blogs", path: "/blogs", icon: BookOpen },
-    { name: "To Do List", path: "/todo", icon: CheckSquare },
+    { name: "Task List", path: "/todo", icon: CheckSquare },
     { name: "Weekly Planner", path: "/weekly", icon: Calendar },
     { name: "Notes", path: "/notes", icon: FileText },
     { name: "Link", path: "/linkspage", icon: Link },
-    { name: "Project Planner", path: "/project", icon: Layout },
+    { name: "Trip Planner", path: "/project", icon: Plane },
   ];
 
   const handleItemClick = (path) => {

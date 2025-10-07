@@ -4,7 +4,7 @@ import Profile from "./Profile";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthProvider";
-
+import TextPressure from "../ui/TextPressure";
 const Header = ({ toggleSidebar }) => {
   const navigate = useNavigate();
   const { logout } = useAuth();
@@ -29,9 +29,21 @@ const Header = ({ toggleSidebar }) => {
       >
         <Menu className="inline-block mr-2" />
       </div>
-      <h1 className="text-center text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text">
-        Weekly Wise
-      </h1>
+      <div style={{ position: "relative", height: "90px" }}>
+        <TextPressure
+          text=" Weekly Wise"
+          flex={true}
+          alpha={false}
+          stroke={false}
+          width={true}
+          weight={true}
+          italic={true}
+          textColor="transparent"
+          strokeColor="#ff0000"
+          minFontSize={90}
+          className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent font-bold text-center"
+        />
+      </div>
       <div className="relative z-10">
         <Profile handleLogout={handleLogout} />
       </div>

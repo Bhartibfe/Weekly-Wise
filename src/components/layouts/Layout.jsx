@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import LiquidEther from "../ui/LiquidEther";
 import { menuItems } from "../shared/menuItems";
 import { Home } from "lucide-react";
-
+import Shuffle from "../ui/Shuffle";
 const Layout = () => {
   const navigate = useNavigate();
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -37,16 +37,18 @@ const Layout = () => {
             <div className="space-y-2">
               {/* Home link */}
               <div
-                className="group font-medium flex items-center gap-3 px-4 py-3 hover:bg-gradient-to-r hover:from-purple-600/20 hover:to-pink-600/20 text-gray-300 hover:text-white rounded-xl cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-purple-500/10"
+                className="group font-medium flex items-center gap-3 px-4 py-3 
+                hover:text-gradient-to-r hover:text-from-purple-600/20 hover:to-pink-600/20 text-gray-300 hover:text-white rounded-xl cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-purple-500/10"
                 onClick={() => navigate("/")}
               >
                 <Home
                   size={20}
                   className="group-hover:text-purple-400 transition-colors"
                 />
-                <span className="group-hover:translate-x-1 transition-transform">
-                  Home
-                </span>
+                <Shuffle
+                  text="Home"
+                  className="group-hover:text-purple-400 transition-colors"
+                />
               </div>
 
               {/* Divider */}
@@ -59,16 +61,13 @@ const Layout = () => {
                 {menuItems.map((item) => (
                   <div
                     key={item.path}
-                    className="group font-medium flex items-center gap-3 px-4 py-3 hover:bg-gradient-to-r hover:from-purple-600/20 hover:to-pink-600/20 text-gray-300 hover:text-white rounded-xl cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-purple-500/10"
+                    className="group font-medium flex items-center gap-3 px-4 py-3 hover:text-gradient-to-r hover:text-from-purple-600/20 hover:to-pink-600/20 text-gray-300 rounded-xl cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-purple-500/10"
                     onClick={() => navigate(item.path)}
                   >
-                    <item.icon
-                      size={20}
-                      className="group-hover:text-purple-400 transition-colors"
+                    <Shuffle
+                      text={item.name}
+                      className="group-hover:text-purple-300 transition-colors "
                     />
-                    <span className="group-hover:translate-x-1 transition-transform">
-                      {item.name}
-                    </span>
                   </div>
                 ))}
               </div>
