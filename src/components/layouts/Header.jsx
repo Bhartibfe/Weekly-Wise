@@ -1,5 +1,5 @@
-//import { Menu } from "lucide-react";
-import { Home } from "lucide-react";
+import { Menu } from "lucide-react";
+// import { Home } from "lucide-react";
 import Profile from "./Profile";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
@@ -27,12 +27,7 @@ const Header = ({ toggleSidebar }) => {
         className="text-2xl font-bold flex items-center cursor-pointer text-purple-600 hover:text-purple-700 transition-colors"
         onClick={toggleSidebar}
       >
-        <div
-          className="font-medium flex items-center gap-2 px-3 py-2 hover:bg-purple-100 text-purple-600 rounded-lg cursor-pointer transition-colors"
-          onClick={() => navigate("/")}
-        >
-          <Home size={25} />
-        </div>
+        <Menu className="inline-block mr-2" />
       </div>
       <h1 className="text-center text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text">
         Weekly Wise
