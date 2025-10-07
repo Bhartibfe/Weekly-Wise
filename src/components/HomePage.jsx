@@ -62,8 +62,8 @@ const HomePage = () => {
           enableTilt
           clickEffect
           enableMagnetism
-          textAutoHide={false}
-          particleCount={12}
+          textAutoHide={true}
+          particleCount={0}
           glowColor="180, 120, 255"
           onCardClick={(path) => navigate(path)} // ✅ pass callback here
         />
